@@ -376,158 +376,189 @@ export default function LiquidityPage() {
 
   return (
     <div
-      className={`min-h-screen relative font-sans transition-colors duration-300 ease-in-out select-none overflow-x-hidden pb-16
-        ${isDark ? "bg-[#0D111C] text-white" : "bg-[#F9FAFB] text-zinc-950"}`}
+      className={`min-h-screen relative font-sans transition-colors duration-300 ease-in-out select-none overflow-x-hidden pb-20
+        ${isDark ? "bg-[#0D111C] text-white" : "bg-white text-zinc-950"}`}
       style={{
         background: isDark
-          ? "radial-gradient(100% 100% at 50% 0%, #131A2A 0%, #0D111C 100%)"
-          : "radial-gradient(100% 100% at 50% 0%, #FFF4F8 0%, #F9FAFB 100%)"
+          ? "linear-gradient(135deg, #0D111C 0%, #1a1f2e 50%, #0D111C 100%)"
+          : "linear-gradient(135deg, #fafbfc 0%, #f5f7fa 50%, #fafbfc 100%)"
       }}
     >
-      {/* Blurred glow background behind the main UI grid */}
+      {/* Ambient glow effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <motion.div
           animate={{
-            scale: [1, 1.15, 1],
-            x: [0, -30, 0],
-            y: [0, 20, 0],
+            scale: [1, 1.2, 1],
+            x: [0, -40, 0],
+            y: [0, 30, 0],
           }}
           transition={{
-            duration: 15,
+            duration: 18,
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className={`absolute left-[30%] top-[20%] -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-[160px] opacity-15 dark:opacity-[0.18]
-            ${isDark ? "bg-gradient-to-r from-[#FB118E] to-[#8C33FF]" : "bg-gradient-to-r from-[#FF81C5] to-[#B07EFF]"}`}
+          className={`absolute left-1/4 top-1/4 w-[500px] h-[500px] rounded-full blur-[140px] opacity-12
+            ${isDark ? "bg-gradient-to-r from-cyan-500/30 to-purple-500/30" : "bg-gradient-to-r from-cyan-400/20 to-blue-400/20"}`}
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.1, 1],
+            x: [0, 50, 0],
+            y: [0, -40, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1
+          }}
+          className={`absolute right-1/4 bottom-1/3 w-[600px] h-[600px] rounded-full blur-[150px] opacity-10
+            ${isDark ? "bg-gradient-to-l from-pink-500/20 to-orange-500/20" : "bg-gradient-to-l from-pink-300/15 to-orange-300/15"}`}
         />
       </div>
 
 
 
       {/* Main dashboard view grid */}
-      <main className="relative z-10 px-4 pt-10 md:pt-16 max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <main className="relative z-10 px-4 pt-12 md:pt-20 max-w-[1320px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
         
+        {/* HEADER SECTION */}
+        <div className="lg:col-span-12 mb-4">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-2"
+          >
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight">
+              <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                Liquidity Pool
+              </span>
+            </h1>
+            <p className={`text-base ${isDark ? "text-zinc-400" : "text-zinc-600"} max-w-2xl font-light leading-relaxed`}>
+              Manage your concentrated LP position and deploy liquidity across custom price ranges on Uniswap V3.
+            </p>
+          </motion.div>
+        </div>
+
         {/* LEFT COLUMN (Active Position & Actions - Spans 7 cols) */}
         <div className="lg:col-span-7 space-y-6">
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-[#FB118E] to-[#FF7A00] bg-clip-text text-transparent uppercase font-display">
-            Active Concentrated LP Position
-          </h1>
-          <p className={`text-xs ${isDark ? "text-zinc-400" : "text-zinc-500"} leading-relaxed max-w-lg`}>
-            Manage your concentrated range position dynamically. Uniswap V3 utilizes concentrated ticks to generate high capital efficiency.
-          </p>
 
           <AnimatePresence mode="wait">
             {activeTokenId === null ? (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className={`p-10 rounded-[24px] border text-center flex flex-col items-center justify-center gap-4
-                  ${isDark ? "bg-[#131A2A]/40 border-[#2C364F]/20" : "bg-white border-zinc-150 shadow-sm"}`}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className={`p-12 rounded-2xl border backdrop-blur-md flex flex-col items-center justify-center gap-5 text-center
+                  ${isDark ? "bg-[#131A2A]/60 border-[#2C364F]/40" : "bg-white/70 border-zinc-200/60 shadow-lg shadow-black/5"}`}
               >
-                <HelpCircle size={48} className="text-zinc-500 opacity-60 animate-bounce" />
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <HelpCircle size={52} className={`${isDark ? "text-cyan-400/50" : "text-cyan-500/50"}`} />
+                </motion.div>
                 <div>
-                  <h3 className="font-bold text-lg">Querying active LP state...</h3>
-                  <p className="text-xs text-zinc-500 mt-1">Connecting to tMST blockchain nodes</p>
+                  <h3 className="font-bold text-xl mb-1">Checking Pool State</h3>
+                  <p className={`text-sm ${isDark ? "text-zinc-500" : "text-zinc-600"}`}>Querying blockchain for active position</p>
                 </div>
               </motion.div>
             ) : activeTokenId === 0n ? (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className={`p-10 rounded-[24px] border text-center flex flex-col items-center justify-center gap-4
-                  ${isDark ? "bg-[#131A2A]/40 border-[#2C364F]/20" : "bg-white border-zinc-150 shadow-sm"}`}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className={`p-12 rounded-2xl border backdrop-blur-md flex flex-col items-center justify-center gap-5 text-center
+                  ${isDark ? "bg-[#131A2A]/60 border-[#2C364F]/40" : "bg-white/70 border-zinc-200/60 shadow-lg shadow-black/5"}`}
               >
-                <Coins size={48} className="text-zinc-500 opacity-60" />
+                <Coins size={52} className={`${isDark ? "text-zinc-500/50" : "text-zinc-400/50"}`} />
                 <div>
-                  <h3 className="font-bold text-lg">No Active Position Found</h3>
-                  <p className="text-xs text-zinc-500 mt-1">Initialize the Concentrated Liquidity pool in the right panel to get started!</p>
+                  <h3 className="font-bold text-xl mb-1">No Active Position</h3>
+                  <p className={`text-sm ${isDark ? "text-zinc-500" : "text-zinc-600"}`}>Create and initialize a pool on the right panel</p>
                 </div>
               </motion.div>
             ) : (
               <motion.div
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 className="space-y-6"
               >
                 {/* Active Position Details Panel */}
                 <div
-                  className={`p-6 rounded-[24px] border shadow-lg relative overflow-hidden
-                    ${isDark ? "bg-[#131A2A] border-[#2C364F]/50" : "bg-white border-zinc-150"}`}
+                  className={`p-7 rounded-2xl border backdrop-blur-md overflow-hidden relative
+                    ${isDark ? "bg-[#131A2A]/70 border-[#2C364F]/50 shadow-xl shadow-black/20" : "bg-white/80 border-zinc-200/60 shadow-lg shadow-black/5"}`}
                 >
-                  <div className="absolute right-0 top-0 w-24 h-24 bg-gradient-to-bl from-pink-500/10 to-transparent rounded-bl-full" />
+                  <div className="absolute -right-32 -top-32 w-64 h-64 bg-gradient-to-bl from-cyan-500/10 to-transparent rounded-full blur-3xl" />
                   
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-xs font-bold py-1 px-2.5 rounded-lg bg-pink-500/10 text-[#FB118E]">
-                      NFT Token ID #{activeTokenId.toString()}
-                    </span>
-                    <span className="text-xs font-semibold flex items-center gap-1 opacity-70">
-                      Active Range Lower: {initTickLower} to Upper: {initTickUpper}
-                    </span>
-                  </div>
-
-                  <h3 className="text-base font-bold mb-3 flex items-center gap-2">
-                    <ShieldCheck size={18} className="text-[#FB118E]" />
-                    Concentrated Reserves Stored
-                  </h3>
-
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className={`p-4 rounded-xl border ${isDark ? "bg-[#1B2236] border-[#2C364F]/30" : "bg-[#F5F6FC] border-transparent"}`}>
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <TokenLogo symbol="WMST" size={16} />
-                        <span className="text-xs font-semibold text-zinc-400">WMST Reserve</span>
+                  <div className="relative z-10 flex flex-col gap-6">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <span className={`inline-block text-[11px] font-bold py-1.5 px-3 rounded-lg mb-2 ${isDark ? "bg-cyan-500/15 text-cyan-400" : "bg-cyan-500/10 text-cyan-600"}`}>
+                          NFT Token ID #{activeTokenId.toString()}
+                        </span>
+                        <h3 className="text-lg font-bold">Your Concentrated Position</h3>
                       </div>
-                      <span className="text-lg font-bold">
-                        {lpAmount0 !== null ? Number(formatUnits(lpAmount0, wmstToken.decimals)).toFixed(4) : "0.0000"}
-                      </span>
-                    </div>
-
-                    <div className={`p-4 rounded-xl border ${isDark ? "bg-[#1B2236] border-[#2C364F]/30" : "bg-[#F5F6FC] border-transparent"}`}>
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <TokenLogo symbol="USDC" size={16} />
-                        <span className="text-xs font-semibold text-zinc-400">USDC Reserve</span>
+                      <div className="text-right">
+                        <p className={`text-xs ${isDark ? "text-zinc-500" : "text-zinc-600"} mb-1`}>Active Range</p>
+                        <p className="text-xs font-mono font-bold">{initTickLower} → {initTickUpper}</p>
                       </div>
-                      <span className="text-lg font-bold">
-                        {lpAmount1 !== null ? Number(formatUnits(lpAmount1, usdcToken.decimals)).toFixed(4) : "0.0000"}
-                      </span>
+                    </div>
+
+                    <div className="h-px bg-gradient-to-r from-transparent via-[#2C364F]/20 to-transparent" />
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className={`p-5 rounded-xl border backdrop-blur-sm ${isDark ? "bg-[#1B2236]/50 border-[#2C364F]/30" : "bg-zinc-50/70 border-zinc-200/40"}`}>
+                        <div className="flex items-center gap-2 mb-2">
+                          <TokenLogo symbol="WMST" size={18} />
+                          <span className={`text-xs font-semibold ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>WMST Reserve</span>
+                        </div>
+                        <span className="text-xl font-bold block">
+                          {lpAmount0 !== null ? Number(formatUnits(lpAmount0, wmstToken.decimals)).toFixed(4) : "0.0000"}
+                        </span>
+                      </div>
+
+                      <div className={`p-5 rounded-xl border backdrop-blur-sm ${isDark ? "bg-[#1B2236]/50 border-[#2C364F]/30" : "bg-zinc-50/70 border-zinc-200/40"}`}>
+                        <div className="flex items-center gap-2 mb-2">
+                          <TokenLogo symbol="USDC" size={18} />
+                          <span className={`text-xs font-semibold ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>USDC Reserve</span>
+                        </div>
+                        <span className="text-xl font-bold block">
+                          {lpAmount1 !== null ? Number(formatUnits(lpAmount1, usdcToken.decimals)).toFixed(4) : "0.0000"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className={`p-4 rounded-lg border ${isDark ? "bg-[#1B2236]/30 border-[#2C364F]/20" : "bg-zinc-50/50 border-zinc-200/30"}`}>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className={`text-xs font-semibold ${isDark ? "text-zinc-500" : "text-zinc-600"}`}>Liquidity Amount</span>
+                        <span className="text-sm font-bold text-cyan-400">{lpLiquidity !== null ? lpLiquidity.toString() : "0"}</span>
+                      </div>
+                      <a
+                        href={`https://testnet.mstscan.com/address/${poolAddress}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={`text-xs font-mono underline flex items-center gap-1.5 ${isDark ? "text-zinc-500 hover:text-cyan-400" : "text-zinc-600 hover:text-cyan-600"}`}
+                      >
+                        Pool: {poolAddress.slice(0, 10)}...{poolAddress.slice(-8)}
+                        <ExternalLink size={12} />
+                      </a>
                     </div>
                   </div>
-
-                  <div className="flex justify-between items-center text-xs opacity-75 mt-2">
-                    <span className="font-semibold">Pool Address:</span>
-                    <a
-                      href={`https://testnet.mstscan.com/address/${poolAddress}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="font-mono underline hover:text-[#FB118E] flex items-center gap-1"
-                    >
-                      {poolAddress.slice(0, 10)}...{poolAddress.slice(-8)}
-                      <ExternalLink size={10} />
-                    </a>
-                  </div>
-
-                  {lpLiquidity !== null && (
-                    <div className="flex justify-between items-center text-xs opacity-75 mt-2">
-                      <span className="font-semibold">Active Liquidity:</span>
-                      <span className="font-mono font-bold text-pink-500">{lpLiquidity.toString()}</span>
-                    </div>
-                  )}
                 </div>
 
                 {/* Add Liquidity Operation panel */}
                 <div
-                  className={`p-6 rounded-[24px] border shadow-md
-                    ${isDark ? "bg-[#131A2A] border-[#2C364F]/40" : "bg-white border-zinc-150"}`}
+                  className={`p-7 rounded-2xl border backdrop-blur-md
+                    ${isDark ? "bg-[#131A2A]/70 border-[#2C364F]/50 shadow-xl shadow-black/20" : "bg-white/80 border-zinc-200/60 shadow-lg shadow-black/5"}`}
                 >
-                  <h3 className="text-base font-bold mb-4 flex items-center gap-1.5">
-                    <Plus size={18} className="text-emerald-400" />
-                    Add Liquidity to Active Position
+                  <h3 className="text-lg font-bold mb-5 flex items-center gap-2">
+                    <Plus size={20} className="text-emerald-400" />
+                    Add Liquidity to Position
                   </h3>
 
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[11px] font-semibold text-zinc-400 mb-1.5">
-                          Desired WMST
+                        <label className={`block text-xs font-bold mb-2 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
+                          WMST Amount
                         </label>
                         <div className="relative">
                           <input
@@ -536,17 +567,17 @@ export default function LiquidityPage() {
                             value={addWmst}
                             onChange={(e) => setAddWmst(e.target.value)}
                             disabled={isWorking}
-                            className={`w-full py-2.5 px-3 rounded-xl border text-sm font-medium outline-none bg-transparent
-                              ${isDark ? "border-[#2C364F]/50 focus:border-[#FB118E]" : "border-zinc-200 focus:border-[#FB118E]"}`}
+                            className={`w-full py-3 px-3.5 rounded-lg border text-sm font-medium outline-none bg-transparent transition
+                              ${isDark ? "border-[#2C364F]/50 focus:border-cyan-500/50" : "border-zinc-300/50 focus:border-cyan-500/50"}`}
                           />
-                          <span className="absolute right-3 top-2.5 text-xs font-bold text-zinc-500">WMST</span>
+                          <span className={`absolute right-3 top-3 text-xs font-bold ${isDark ? "text-zinc-500" : "text-zinc-600"}`}>WMST</span>
                         </div>
-                        <span className="text-[10px] text-zinc-500 mt-1 block">Bal: {wmstBalance}</span>
+                        <span className={`text-xs mt-1.5 block ${isDark ? "text-zinc-500" : "text-zinc-600"}`}>Bal: {wmstBalance}</span>
                       </div>
 
                       <div>
-                        <label className="block text-[11px] font-semibold text-zinc-400 mb-1.5">
-                          Desired USDC
+                        <label className={`block text-xs font-bold mb-2 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
+                          USDC Amount
                         </label>
                         <div className="relative">
                           <input
@@ -555,21 +586,25 @@ export default function LiquidityPage() {
                             value={addUsdc}
                             onChange={(e) => setAddUsdc(e.target.value)}
                             disabled={isWorking}
-                            className={`w-full py-2.5 px-3 rounded-xl border text-sm font-medium outline-none bg-transparent
-                              ${isDark ? "border-[#2C364F]/50 focus:border-[#FB118E]" : "border-zinc-200 focus:border-[#FB118E]"}`}
+                            className={`w-full py-3 px-3.5 rounded-lg border text-sm font-medium outline-none bg-transparent transition
+                              ${isDark ? "border-[#2C364F]/50 focus:border-cyan-500/50" : "border-zinc-300/50 focus:border-cyan-500/50"}`}
                           />
-                          <span className="absolute right-3 top-2.5 text-xs font-bold text-zinc-500">USDC</span>
+                          <span className={`absolute right-3 top-3 text-xs font-bold ${isDark ? "text-zinc-500" : "text-zinc-600"}`}>USDC</span>
                         </div>
-                        <span className="text-[10px] text-zinc-500 mt-1 block">Bal: {usdcBalance}</span>
+                        <span className={`text-xs mt-1.5 block ${isDark ? "text-zinc-500" : "text-zinc-600"}`}>Bal: {usdcBalance}</span>
                       </div>
                     </div>
 
                     <button
                       onClick={handleAddLiquidity}
                       disabled={isWorking || !addWmst || !addUsdc}
-                      className="w-full py-3 rounded-xl font-bold text-sm tracking-wide bg-[#FB118E] hover:bg-[#FB118E]/95 text-white active:scale-[0.99] transition-all shadow-md shadow-pink-500/10"
+                      className={`w-full py-3.5 rounded-lg font-bold text-sm tracking-wide transition-all active:scale-[0.98]
+                        ${isWorking || !addWmst || !addUsdc 
+                          ? isDark ? "bg-emerald-500/20 text-emerald-400/50" : "bg-emerald-500/15 text-emerald-600/50"
+                          : isDark ? "bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 shadow-lg shadow-emerald-500/10" : "bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-600 shadow-lg shadow-emerald-500/5"
+                        }`}
                     >
-                      Increase Concentrated LP Range
+                      {isWorking ? "Processing..." : "Increase Liquidity"}
                     </button>
                   </div>
                 </div>
@@ -578,16 +613,16 @@ export default function LiquidityPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Remove Liquidity card */}
                   <div
-                    className={`p-6 rounded-[24px] border shadow-md
-                      ${isDark ? "bg-[#131A2A] border-[#2C364F]/40" : "bg-white border-zinc-150"}`}
+                    className={`p-7 rounded-2xl border backdrop-blur-md
+                      ${isDark ? "bg-[#131A2A]/70 border-[#2C364F]/50 shadow-xl shadow-black/20" : "bg-white/80 border-zinc-200/60 shadow-lg shadow-black/5"}`}
                   >
-                    <h3 className="text-base font-bold mb-4">Remove Concentrated Liquidity</h3>
+                    <h3 className="text-lg font-bold mb-5">Remove Liquidity</h3>
                     
-                    <div className="space-y-4">
+                    <div className="space-y-5">
                       <div>
-                        <div className="flex justify-between items-center text-xs mb-2">
-                          <span className="text-zinc-400 font-semibold">Percentage to withdraw</span>
-                          <span className="text-[#FB118E] font-bold">{removePercent}%</span>
+                        <div className="flex justify-between items-center mb-3">
+                          <label className={`text-xs font-bold ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>Withdraw Amount</label>
+                          <span className="text-sm font-bold bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">{removePercent}%</span>
                         </div>
                         <input
                           type="range"
@@ -596,13 +631,12 @@ export default function LiquidityPage() {
                           value={removePercent}
                           onChange={(e) => setRemovePercent(Number(e.target.value))}
                           disabled={isWorking}
-                          className="w-full accent-pink-500 cursor-pointer h-1.5 bg-zinc-700 rounded-lg appearance-none"
+                          className={`w-full h-2 rounded-lg appearance-none cursor-pointer transition
+                            ${isDark ? "bg-[#2C364F]/30" : "bg-zinc-300/30"} accent-red-500`}
                         />
-                        <div className="flex justify-between text-[10px] text-zinc-500 mt-1">
+                        <div className="flex justify-between text-[10px] text-zinc-500 mt-2">
                           <span>0%</span>
-                          <span>25%</span>
                           <span>50%</span>
-                          <span>75%</span>
                           <span>100%</span>
                         </div>
                       </div>
@@ -610,31 +644,39 @@ export default function LiquidityPage() {
                       <button
                         onClick={handleRemoveLiquidity}
                         disabled={isWorking || !lpLiquidity || lpLiquidity === 0n}
-                        className="w-full py-2.5 rounded-xl font-bold text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 transition"
+                        className={`w-full py-3.5 rounded-lg font-bold text-sm transition-all active:scale-[0.98]
+                          ${isWorking || !lpLiquidity || lpLiquidity === 0n
+                            ? isDark ? "bg-red-500/20 text-red-400/50" : "bg-red-500/15 text-red-600/50"
+                            : isDark ? "bg-red-500/20 hover:bg-red-500/30 text-red-400 shadow-lg shadow-red-500/10" : "bg-red-500/15 hover:bg-red-500/25 text-red-600 shadow-lg shadow-red-500/5"
+                          }`}
                       >
-                        Decrease LP Reserves
+                        {isWorking ? "Processing..." : "Decrease Liquidity"}
                       </button>
                     </div>
                   </div>
 
                   {/* Collect fees card */}
                   <div
-                    className={`p-6 rounded-[24px] border shadow-md flex flex-col justify-between
-                      ${isDark ? "bg-[#131A2A] border-[#2C364F]/40" : "bg-white border-zinc-150"}`}
+                    className={`p-7 rounded-2xl border backdrop-blur-md flex flex-col justify-between
+                      ${isDark ? "bg-[#131A2A]/70 border-[#2C364F]/50 shadow-xl shadow-black/20" : "bg-white/80 border-zinc-200/60 shadow-lg shadow-black/5"}`}
                   >
                     <div>
-                      <h3 className="text-base font-bold mb-2">Accumulated LP Fee Rewards</h3>
-                      <p className={`text-xs ${isDark ? "text-zinc-400" : "text-zinc-500"} mb-4`}>
-                        Generated from swapping slippages and trading commissions inside your price ranges.
+                      <h3 className="text-lg font-bold mb-2">LP Fee Rewards</h3>
+                      <p className={`text-xs ${isDark ? "text-zinc-400" : "text-zinc-600"} leading-relaxed`}>
+                        Accrued fees from swaps within your price range.
                       </p>
                     </div>
 
                     <button
                       onClick={handleCollectFees}
                       disabled={isWorking}
-                      className="w-full py-3 rounded-xl font-bold text-xs bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 transition"
+                      className={`w-full py-3.5 rounded-lg font-bold text-sm mt-6 transition-all active:scale-[0.98]
+                        ${isWorking 
+                          ? isDark ? "bg-amber-500/20 text-amber-400/50" : "bg-amber-500/15 text-amber-600/50"
+                          : isDark ? "bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 shadow-lg shadow-amber-500/10" : "bg-amber-500/15 hover:bg-amber-500/25 text-amber-600 shadow-lg shadow-amber-500/5"
+                        }`}
                     >
-                      Collect Accrued Fees
+                      {isWorking ? "Collecting..." : "Collect Fees"}
                     </button>
                   </div>
                 </div>
@@ -646,31 +688,39 @@ export default function LiquidityPage() {
           <AnimatePresence>
             {statusText && (
               <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
+                initial={{ height: 0, opacity: 0, y: -10 }}
+                animate={{ height: "auto", opacity: 1, y: 0 }}
+                exit={{ height: 0, opacity: 0, y: -10 }}
                 className="overflow-hidden"
               >
                 <div
-                  className={`p-4 rounded-[20px] border text-xs font-semibold leading-relaxed
+                  className={`p-5 rounded-xl border backdrop-blur-sm text-xs font-medium leading-relaxed
                     ${
                       statusText.includes("minted") || statusText.includes("added") || statusText.includes("removed") || statusText.includes("collected")
-                        ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 animate-pulse"
-                        : "bg-[#131A2A] border-[#2C364F]/50 text-zinc-300"
+                        ? isDark ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400" : "bg-emerald-500/10 border-emerald-500/20 text-emerald-700"
+                        : isDark ? "bg-blue-500/15 border-blue-500/30 text-blue-400" : "bg-blue-500/10 border-blue-500/20 text-blue-700"
                     }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <span>Status: {statusText}</span>
+                  <div className="flex items-center justify-between mb-2">
+                    <span>{statusText}</span>
                     <button
                       onClick={() => setStatusText("")}
-                      className="underline text-[10px] uppercase font-bold text-[#FB118E]"
+                      className={`text-[10px] uppercase font-bold ${isDark ? "hover:text-white" : "hover:text-black"} transition`}
                     >
-                      Dismiss
+                      ✕
                     </button>
                   </div>
                   {txHash && (
-                    <div className="mt-2 font-mono text-[10px] break-all opacity-70">
-                      TX Hash: <a href={`https://testnet.mstscan.com/tx/${txHash}`} target="_blank" rel="noreferrer" className="underline hover:text-[#FB118E] flex items-center gap-1 mt-0.5">{txHash} <ExternalLink size={8} /></a>
+                    <div className={`text-[10px] font-mono mt-2 pt-2 border-t ${isDark ? "border-blue-500/20" : "border-blue-500/10"}`}>
+                      <a 
+                        href={`https://testnet.mstscan.com/tx/${txHash}`} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="flex items-center gap-1.5 hover:underline"
+                      >
+                        {txHash.slice(0, 16)}...{txHash.slice(-12)}
+                        <ExternalLink size={9} />
+                      </a>
                     </div>
                   )}
                 </div>
@@ -682,147 +732,156 @@ export default function LiquidityPage() {
         {/* RIGHT COLUMN (Create Pool Panel - Spans 5 cols) */}
         <div className="lg:col-span-5">
           <div
-            className={`p-6 rounded-[24px] border shadow-xl relative
+            className={`p-8 rounded-2xl border backdrop-blur-md relative
               ${
                 isDark
-                  ? "bg-[#131A2A] border-[#2C364F]/50 text-white"
-                  : "bg-white border-zinc-150 text-zinc-950"
+                  ? "bg-[#131A2A]/70 border-[#2C364F]/50 shadow-xl shadow-black/20"
+                  : "bg-white/80 border-zinc-200/60 shadow-lg shadow-black/5"
               }`}
           >
-            <h2 className="text-lg font-bold mb-1 flex items-center gap-2">
-              <Coins size={18} className="text-[#FB118E]" />
-              Create & Initialize Pool
-            </h2>
-            <p className={`text-xs ${isDark ? "text-zinc-500" : "text-zinc-400"} mb-5 leading-normal`}>
-              Deploy a new concentrated liquidity pool. The orchestrator will initialize token ranges, register the pool with the factory, and mint the concentrated position.
-            </p>
+            <div className="absolute -right-40 -top-40 w-80 h-80 bg-gradient-to-bl from-purple-500/10 to-transparent rounded-full blur-3xl" />
 
-            <div className="space-y-4">
-              {/* Fee Tier */}
-              <div>
-                <label className="block text-[11px] font-bold text-zinc-400 mb-2">
-                  Select Pool Fee Tier
-                </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {[500, 3000, 10000].map((fee) => (
-                    <button
-                      key={fee}
-                      type="button"
-                      onClick={() => setInitFee(fee)}
-                      className={`py-2 px-3 rounded-xl border text-xs font-bold transition
-                        ${
-                          initFee === fee
-                            ? "bg-[#FB118E]/10 border-[#FB118E] text-[#FB118E]"
-                            : isDark
-                            ? "bg-[#1B2236] border-[#2C364F]/30 text-zinc-400 hover:border-[#2C364F]"
-                            : "bg-[#F5F6FC] border-transparent text-zinc-600 hover:bg-zinc-100"
-                        }`}
-                    >
-                      {(fee / 10000).toFixed(2)}%
-                      <span className="block text-[9px] font-normal text-zinc-500">
-                        {fee === 3000 ? "Best for standard pairs" : fee === 500 ? "Stable pairs" : "Exotic pairs"}
-                      </span>
-                    </button>
-                  ))}
-                </div>
+            <div className="relative z-10">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
+                  <Coins size={24} className="text-cyan-400" />
+                  Create Pool
+                </h2>
+                <p className={`text-sm ${isDark ? "text-zinc-400" : "text-zinc-600"} leading-relaxed`}>
+                  Deploy a new concentrated liquidity pool and initialize your first position.
+                </p>
               </div>
 
-              {/* Token Desired inputs */}
-              <div className="space-y-3">
+              <div className="space-y-5">
+                {/* Fee Tier */}
                 <div>
-                  <div className="flex justify-between text-xs mb-1 font-semibold">
-                    <span className="text-zinc-400">Initial WMST Amount</span>
-                    <span>Bal: {wmstBalance}</span>
+                  <label className={`block text-xs font-bold mb-3 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
+                    Pool Fee Tier
+                  </label>
+                  <div className="grid grid-cols-3 gap-2.5">
+                    {[500, 3000, 10000].map((fee) => (
+                      <button
+                        key={fee}
+                        type="button"
+                        onClick={() => setInitFee(fee)}
+                        className={`py-3 px-3 rounded-lg border text-xs font-bold transition-all
+                          ${
+                            initFee === fee
+                              ? isDark ? "bg-cyan-500/20 border-cyan-500/40 text-cyan-400 shadow-lg shadow-cyan-500/10" : "bg-cyan-500/15 border-cyan-500/30 text-cyan-600 shadow-lg shadow-cyan-500/5"
+                              : isDark ? "bg-[#1B2236]/50 border-[#2C364F]/30 text-zinc-400 hover:border-[#2C364F]/60" : "bg-zinc-50/50 border-zinc-300/30 text-zinc-600 hover:border-zinc-300/60"
+                          }`}
+                      >
+                        {(fee / 10000).toFixed(2)}%
+                        <div className="text-[10px] font-normal mt-0.5 opacity-75">
+                          {fee === 3000 ? "Typical" : fee === 500 ? "Stable" : "Exotic"}
+                        </div>
+                      </button>
+                    ))}
                   </div>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="0.0"
-                      value={initWmst}
-                      onChange={(e) => setInitWmst(e.target.value)}
-                      disabled={isWorking}
-                      className={`w-full py-2.5 px-3 rounded-xl border text-sm font-medium outline-none bg-transparent
-                        ${isDark ? "border-[#2C364F]/50 focus:border-[#FB118E]" : "border-zinc-200 focus:border-[#FB118E]"}`}
-                    />
-                    <div className="absolute right-3 top-2.5 flex items-center gap-1">
-                      <TokenLogo symbol="WMST" size={16} />
-                      <span className="text-xs font-bold">WMST</span>
+                </div>
+
+                {/* Token inputs */}
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <label className={`text-xs font-bold ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>Initial WMST</label>
+                      <span className={`text-xs ${isDark ? "text-zinc-500" : "text-zinc-600"}`}>Bal: {wmstBalance}</span>
+                    </div>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="0.0"
+                        value={initWmst}
+                        onChange={(e) => setInitWmst(e.target.value)}
+                        disabled={isWorking}
+                        className={`w-full py-3 px-3.5 rounded-lg border text-sm font-medium outline-none bg-transparent transition
+                          ${isDark ? "border-[#2C364F]/50 focus:border-cyan-500/50" : "border-zinc-300/50 focus:border-cyan-500/50"}`}
+                      />
+                      <div className="absolute right-3 top-3 flex items-center gap-1">
+                        <TokenLogo symbol="WMST" size={16} />
+                        <span className="text-xs font-bold">WMST</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <label className={`text-xs font-bold ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>Initial USDC</label>
+                      <span className={`text-xs ${isDark ? "text-zinc-500" : "text-zinc-600"}`}>Bal: {usdcBalance}</span>
+                    </div>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="0.0"
+                        value={initUsdc}
+                        onChange={(e) => setInitUsdc(e.target.value)}
+                        disabled={isWorking}
+                        className={`w-full py-3 px-3.5 rounded-lg border text-sm font-medium outline-none bg-transparent transition
+                          ${isDark ? "border-[#2C364F]/50 focus:border-cyan-500/50" : "border-zinc-300/50 focus:border-cyan-500/50"}`}
+                      />
+                      <div className="absolute right-3 top-3 flex items-center gap-1">
+                        <TokenLogo symbol="USDC" size={16} />
+                        <span className="text-xs font-bold">USDC</span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
+                {/* Tick bounds */}
                 <div>
-                  <div className="flex justify-between text-xs mb-1 font-semibold">
-                    <span className="text-zinc-400">Initial USDC Amount</span>
-                    <span>Bal: {usdcBalance}</span>
-                  </div>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="0.0"
-                      value={initUsdc}
-                      onChange={(e) => setInitUsdc(e.target.value)}
-                      disabled={isWorking}
-                      className={`w-full py-2.5 px-3 rounded-xl border text-sm font-medium outline-none bg-transparent
-                        ${isDark ? "border-[#2C364F]/50 focus:border-[#FB118E]" : "border-zinc-200 focus:border-[#FB118E]"}`}
-                    />
-                    <div className="absolute right-3 top-2.5 flex items-center gap-1">
-                      <TokenLogo symbol="USDC" size={16} />
-                      <span className="text-xs font-bold">USDC</span>
+                  <label className={`block text-xs font-bold mb-3 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
+                    Price Range
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <input
+                        type="number"
+                        value={initTickLower}
+                        onChange={(e) => setInitTickLower(e.target.value)}
+                        disabled={isWorking}
+                        className={`w-full py-3 px-3 rounded-lg border text-xs font-mono outline-none bg-transparent transition
+                          ${isDark ? "border-[#2C364F]/50 focus:border-cyan-500/50" : "border-zinc-300/50 focus:border-cyan-500/50"}`}
+                      />
+                      <span className={`text-[10px] mt-1.5 block ${isDark ? "text-zinc-500" : "text-zinc-600"}`}>Lower Tick</span>
+                    </div>
+
+                    <div>
+                      <input
+                        type="number"
+                        value={initTickUpper}
+                        onChange={(e) => setInitTickUpper(e.target.value)}
+                        disabled={isWorking}
+                        className={`w-full py-3 px-3 rounded-lg border text-xs font-mono outline-none bg-transparent transition
+                          ${isDark ? "border-[#2C364F]/50 focus:border-cyan-500/50" : "border-zinc-300/50 focus:border-cyan-500/50"}`}
+                      />
+                      <span className={`text-[10px] mt-1.5 block ${isDark ? "text-zinc-500" : "text-zinc-600"}`}>Upper Tick</span>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Tick Lower & Upper bounds */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[11px] font-bold text-zinc-400 mb-1.5">
-                    Tick Lower
-                  </label>
-                  <input
-                    type="number"
-                    value={initTickLower}
-                    onChange={(e) => setInitTickLower(e.target.value)}
-                    disabled={isWorking}
-                    className={`w-full py-2.5 px-3 rounded-xl border text-xs font-mono outline-none bg-transparent
-                      ${isDark ? "border-[#2C364F]/50 focus:border-[#FB118E]" : "border-zinc-200 focus:border-[#FB118E]"}`}
-                  />
+                {/* Info banner */}
+                <div className={`p-4 rounded-lg border flex items-start gap-3 text-xs leading-relaxed
+                  ${isDark ? "bg-[#1B2236]/50 border-cyan-500/20 text-zinc-400" : "bg-cyan-50/50 border-cyan-300/20 text-zinc-700"}`}>
+                  <Info size={16} className="text-cyan-400 shrink-0 mt-0.5" />
+                  <div>
+                    <p className={`font-bold mb-1 ${isDark ? "text-cyan-400" : "text-cyan-700"}`}>Price Initialization</p>
+                    Deploys at 1:1 ratio. Full-range concentrated position enabled by default.
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-[11px] font-bold text-zinc-400 mb-1.5">
-                    Tick Upper
-                  </label>
-                  <input
-                    type="number"
-                    value={initTickUpper}
-                    onChange={(e) => setInitTickUpper(e.target.value)}
-                    disabled={isWorking}
-                    className={`w-full py-2.5 px-3 rounded-xl border text-xs font-mono outline-none bg-transparent
-                      ${isDark ? "border-[#2C364F]/50 focus:border-[#FB118E]" : "border-zinc-200 focus:border-[#FB118E]"}`}
-                  />
-                </div>
+                {/* Action button */}
+                <button
+                  onClick={handleInitializePool}
+                  disabled={isWorking || !initWmst || !initUsdc}
+                  className={`w-full py-4 rounded-lg font-bold text-sm tracking-wide transition-all active:scale-[0.98]
+                    ${isWorking || !initWmst || !initUsdc 
+                      ? isDark ? "bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-400/50" : "bg-gradient-to-r from-cyan-500/15 to-blue-500/15 text-cyan-600/50"
+                      : isDark ? "bg-gradient-to-r from-cyan-500/30 to-blue-500/30 hover:from-cyan-500/40 hover:to-blue-500/40 text-cyan-400 shadow-lg shadow-cyan-500/20" : "bg-gradient-to-r from-cyan-500/25 to-blue-500/25 hover:from-cyan-500/35 hover:to-blue-500/35 text-cyan-600 shadow-lg shadow-cyan-500/10"
+                    }`}
+                >
+                  {isWorking ? "Deploying..." : "Initialize Pool"}
+                </button>
               </div>
-
-              {/* Info banner */}
-              <div className={`p-3.5 rounded-xl border flex items-start gap-2.5 text-[11px] leading-relaxed
-                ${isDark ? "bg-[#1B2236] border-[#2C364F]/20 text-zinc-400" : "bg-[#F5F6FC] border-transparent text-zinc-600"}`}>
-                <Info size={14} className="text-[#FB118E] shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-zinc-300 dark:text-white block mb-0.5">Initial Pool Rate</span>
-                  The initial ratio will deploy at exactly 1:1 price ratio (`sqrtPriceX96` of `2^96`), matching the deployment configuration of the periphery ecosystem. Lower/Upper ticks default to Full Bounds (`-887220` to `887220`).
-                </div>
-              </div>
-
-              {/* Action trigger button */}
-              <button
-                onClick={handleInitializePool}
-                disabled={isWorking || !initWmst || !initUsdc}
-                className="w-full py-4 rounded-xl font-extrabold text-sm tracking-wide bg-gradient-to-r from-[#FB118E] to-[#FF7A00] text-white hover:opacity-95 shadow-md shadow-pink-500/10 active:scale-[0.99] transition-all"
-              >
-                {isWorking ? "Deploying Pool Contracts..." : "Initialize Pool & Deposit LP"}
-              </button>
             </div>
           </div>
         </div>
