@@ -39,44 +39,57 @@ graph TD
 
 ---
 
-##  Verified Testnet Address Directory
+##  Verified Testnet Address Directory (Live Deployments)
 
 | Contract | Address | Status | Description |
 | :--- | :--- | :--- | :--- |
-| **WMST Token (Wrapped MST)** | `0x97f517A686bfc21D8398C9f6bf0fC0b8d30785Fc` |  Active | Canonical native wrapper, modelled on WETH9. |
-| **USDC Testnet Token** | `0x3468b4ac95f03534a15F633790d9BbD88b130170` |  Active | Mock USDC deployed with 6 decimals. |
-| **UniswapV3Factory** | `0xac925e9887070962a6089909007e936089dd0cde` |  Active | Deploys concentrated liquidity pools. |
-| **Position Descriptor** | `0x5b916c936d871681ad8a99de2ba79afdbca5c6ff` |  Active | NFT tokenURI descriptor metadata handler. |
-| **NonfungiblePositionManager** | `0x487e0e9c69ca6bc08b0f61384afab831b6b187de` |  Active | Mints and tracks concentrated position NFTs. |
-| **SwapRouter** | `0xefa02641c27ec527a09f8484dc491b525cb035f6` |  Active | Handles single-hop and multi-hop swaps. |
-| **QuoterV2** | `0x9b65cc383c258895ad0a6cf4157df924becfc86a` |  Active | Estimates exact input swap quotes. |
-| **WMST/USDC Pool** | `0x884E9554Ed3E44c72D4a1052515BA3e72a495f15` |  Active | Concentrated pool at 0.3% (3000 fee tier). |
-| **LPStateStorage** | `0x7aEbeFbeFBE84a3884Cc7Aa6A8219c475A48C183` |  Active | On-chain storage of active pool positions. |
-| **TestingExecutor** | `0x945F0451B7a4c24340dFfdF94d8fA6921D910b8B` |  Active | Automated lifecycle orchestrator contract. |
+| **WMST Token (Wrapped MST)** | `0xAa0Ab95AA3d885c00711541000eA2c2E66b9472b` | ✅ Live | Recently deployed, canonical native wrapper. |
+| **USDC Testnet Token** | `0x3468b4ac95f03534a15F633790d9BbD88b130170` | ✅ Active | Mock USDC with 6 decimals. |
+| **UniswapV3Factory** | `0x4BF1F8330834dCbD40A251B642e0a9A427BA5D34` | ✅ Live | Deploys concentrated liquidity pools. |
+| **MinimalPositionDescriptor** | `0x640ffE6B0B3B9e2a5dd6d2D738770936A86d0397` | ✅ Live | NFT tokenURI descriptor. |
+| **NonfungiblePositionManager** | `0xCbe60bB7997b9490F6C2CE77dbD3406c865496A9` | ✅ Live | Mints and tracks concentrated position NFTs. |
+| **SwapRouter** | `0xB8dbCe17CB5931DD83aF8dD9a23A4aFbFf33E7a6` | ✅ Live | Handles single-hop and multi-hop swaps. |
+| **QuoterV2** | `0x2A4fec9387Fb44338fC8Cc51E1a96c51c936012b` | ✅ Live | Estimates exact input swap quotes. |
+| **Demo WMST/USDC Pool** | `0xBc3479D30b0216d435e27A4BAeF08de9719F8265` | ✅ Live | Concentrated pool at 0.3% (3000 fee tier). |
+| **LPStateStorage** | `0xe76541a78EB636fb3154e274f4BD57daF6F2AA5A` | ✅ Live | On-chain storage of active pool positions. |
+| **TestingExecutor** | `0x2E6300717bD17215E6E232455ACCe871756d8D0E` | ✅ Live | Automated lifecycle orchestrator contract. |
+| **Demo LP State Storage** | `0x51F3E29586489c2443718464A2f26bFfb86E4259` | ✅ Live | Demo pool state reference. |
 
 ---
 
-##  Environment Configuration & Setup
+##  ⚡ QUICK START - ZERO CONFIGURATION
 
-Create or update your `.env` file under `contracts/` directory using the active verified addresses:
+**See [SETUP_ZERO_CONFIG.md](./SETUP_ZERO_CONFIG.md) for the easiest way to get started.**
+
+### TL;DR
+```bash
+cd frontend
+npm install
+npm run dev
+# Open http://localhost:3001, connect MetaMask, and you're done! 🚀
+```
+
+**No `.env` file required. No configuration. Just MetaMask.**
+
+---
+
+##  Environment Configuration & Setup (For Developers / Smart Contract Deployment)
+
+If you want to **deploy smart contracts** or run the full backend stack, create `.env` in the project root:
 
 ```env
 RPC_URL=https://testnetrpc.mstblockchain.com
-PRIVATE_KEY=0xbadf51d5f09e5f88d4a30f2140e2a091a9cc39b13673d1e211f30c441cc4f4a7
-WMST_ADDRESS=0x97f517A686bfc21D8398C9f6bf0fC0b8d30785Fc
+WS_RPC_URL=wss://testnetrpc.mstblockchain.com
+PRIVATE_KEY=your_private_key_here
 CHAIN_ID=91562037
-V3_FACTORY_ADDRESS=0xac925e9887070962a6089909007e936089dd0cde
-POSITION_MANAGER_ADDRESS=0x487e0e9c69ca6bc08b0f61384afab831b6b187de
-SWAP_ROUTER_ADDRESS=0xefa02641c27ec527a09f8484dc491b525cb035f6
-QUOTER_V2_ADDRESS=0x9b65cc383c258895ad0a6cf4157df924becfc86a
-USDC_ADDRESS=0x3468b4ac95f03534a15F633790d9BbD88b130170
-LP_STATE_STORAGE_ADDRESS=0x7aEbeFbeFBE84a3884Cc7Aa6A8219c475A48C183
-TESTING_EXECUTOR_ADDRESS=0x945F0451B7a4c24340dFfdF94d8fA6921D910b8B
-TEST_PRICE_MULTIPLIER=56
-DEPLOYER=0x9B18dAF9b545Bf77eE2Fc699251c40D69C3a3e3e
+ETHERSCAN_API_KEY=your_api_key_here
+DATABASE_URL=postgresql://mst:mst@localhost:5432/mstdex
+REDIS_URL=redis://localhost:6379
 ```
 
-### Loading Environment Variables in Terminals
+**For frontend usage**: The app uses hardcoded addresses for live MST testnet. No `.env` file needed.
+
+### Loading Environment Variables in Terminals (For Script/Contract Work)
 
 #### MINGW64 / Git Bash:
 ```bash
@@ -350,23 +363,47 @@ All **5/5 test suites** compile cleanly and pass with 100% success!
 
 ## 🚀 Running the Full Stack Locally
 
-To launch the complete integrated DApp locally (both the premium motion frontend and the event-listening API backend):
+To launch the complete integrated DApp locally, you can choose either the single-command Docker Orchestration or the manual Developer mode.
 
-### 1. Start the Backend API & Event Listener Service
-Open a new terminal and execute:
+### Option A: The Automated Docker Way (Recommended)
+This command spins up the databases, Redis cache, IPFS, local Graph Node, the Event-Listening API, and the Frontend in a single, isolated setup:
+```bash
+docker compose up --build
+```
+- **Frontend URL**: `http://localhost:3000`
+- **Backend URL**: `http://localhost:3001`
+
+---
+
+### Option B: The Developer Manual Way
+If you prefer running individual processes for hot-reloading and development feedback:
+
+#### 1. Start Database & Redis Backing Services
+Ensure Docker is active, then spin up the infrastructure container:
+```bash
+docker compose up -d postgres graph-postgres redis ipfs graph-node
+```
+
+#### 2. Start the Backend API & Event Listener
+Prisma client generation and DB setup is required:
 ```bash
 cd backend
+npm install
+npm run prisma:generate
 npm run dev
 ```
-* **Host**: `http://localhost:3001`
-* **Logs**: Actively tracks transaction requests, smart order routing graphs, and ws-subscribers.
+- **Host**: `http://localhost:3001`
+- **Logs**: Monitors live on-chain event streams and updates token swap graph indices.
 
-### 2. Start the Frontend DApp Web Server
-Open a second terminal and execute:
+#### 3. Start the Frontend Vite Server
+Launch the React trading terminal interface:
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
-* **Host**: `http://localhost:3000`
-* **Features**: Live Metamask handshakes, stateless `QuoterV2` pricing simulations, recipient gas fee calculator, and multi-token balance wallet explorers under the vibrant GTA 6 styled neon motion backdrop!
+- **Host**: `http://localhost:3000`
+- **Features**: Real-time wallet handshakes, concentrated swap paths, fee estimations, and dynamic theme visual layers.
 
+#   d e x 3  
+ 
