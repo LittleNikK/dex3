@@ -1,4 +1,5 @@
 import { Suspense, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Link, Route, Routes, useLocation } from "react-router-dom";
@@ -7,15 +8,12 @@ import { BackgroundCanvas } from "./components/swap/BackgroundCanvas";
 
 // Import custom pages
 import SwapPage from "./pages/SwapPage";
-import TrendingPage from "./pages/TrendingPage";
 import TransferPage from "./pages/TransferPage";
 import ExplorePage from "./pages/ExplorePage";
-import AboutPage from "./pages/AboutPage";
-import ContactPage from "./pages/ContactPage";
 import LiquidityPage from "./pages/LiquidityPage";
 import WalletPage from "./pages/WalletPage";
 
-import { Menu, X, Flame, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { useThemeStore } from "./store/themeStore";
 
 const queryClient = new QueryClient();
@@ -28,57 +26,46 @@ function Navigation() {
 
   const links = [
     { to: "/", label: "Swap" },
-    { to: "/trending", label: "Trending" },
     { to: "/transfer", label: "Transfer" },
     { to: "/explore", label: "Explore" },
-    { to: "/liquidity", label: "Liquidity" },
-    { to: "/wallet", label: "Wallet" },
-    { to: "/about", label: "About" },
-    { to: "/contact", label: "Contact" }
+    { to: "/liquidity", label: "Pool" },
+    { to: "/wallet", label: "Connect Wallet" }
   ];
 
   return (
-    <nav className={`sticky top-0 z-50 border-b transition px-4 py-4 max-w-6xl mx-auto rounded-b-2xl backdrop-blur-xl
-      ${isDark ? "border-zinc-900 bg-black/60" : "border-zinc-200 bg-white/70 text-zinc-950 shadow-sm"}`}>
-      <div className="flex items-center justify-between">
-        {/* TOP LEFT: Theme Toggle and Logo */}
+    <motion.nav
+      initial={{ y: -16, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
+      className="sticky top-0 z-50 px-4"
+    >
+      <div
+        className={`mx-auto flex w-full max-w-[calc(100%-3rem)] items-center justify-between gap-4 rounded-none border border-white/20 bg-white/20 px-4 py-3 shadow-[0_18px_60px_-40px_rgba(15,23,42,0.18)] backdrop-blur-xl transition duration-300
+          ${isDark ? "border-zinc-800/70 bg-zinc-950/55 text-white" : "border-slate-200/50 bg-white/40 text-zinc-950"}`}
+      >
         <div className="flex items-center gap-3">
-          <button
-            onClick={toggleTheme}
-            className={`p-1.5 rounded-lg border transition duration-150
-              ${
-                isDark
-                  ? "bg-zinc-900/50 border-zinc-800 text-yellow-400 hover:bg-zinc-800"
-                  : "bg-white border-zinc-200 text-zinc-500 hover:bg-zinc-50 shadow-sm"
-              }`}
-            title="Toggle light/dark mode"
+          <Link
+            to="/"
+            className={`flex items-center gap-2 transition duration-200 ${isDark ? "text-white" : "text-zinc-950"}`}
           >
-            {isDark ? <Sun size={15} /> : <Moon size={15} />}
-          </button>
-
-          <Link to="/" className="flex items-center gap-2 group">
-            <img 
-              src="/logo.png" 
-              alt="MSTSwap Logo" 
-              className="h-8 w-8 object-contain group-hover:scale-110 transition duration-300"
-            />
-            <span className="font-extrabold uppercase tracking-widest text-sm bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent group-hover:text-neon-pink">
-              MSTSWAP
-            </span>
+            <div className="flex h-10 w-10 items-center justify-center rounded-none bg-cyan-500/15 text-cyan-500">
+              <span className="text-base font-semibold">M</span>
+            </div>
+            <span className="text-sm font-semibold uppercase tracking-[0.24em]">MSTSwap</span>
           </Link>
         </div>
 
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-2">
           {links.map((link) => {
             const isActive = link.to === "/"
-              ? (location.pathname === "/" || location.pathname === "/swap")
+              ? location.pathname === "/" || location.pathname === "/swap"
               : location.pathname === link.to;
             return (
-              <Link 
-                key={link.to} 
+              <Link
+                key={link.to}
                 to={link.to}
-                className={`text-xs uppercase tracking-wider font-semibold transition ${isActive ? "text-pink-500 font-extrabold text-neon-pink" : isDark ? "text-zinc-400 hover:text-white" : "text-zinc-500 hover:text-zinc-950"}`}
+                className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] transition duration-200
+                  ${isActive ? "bg-cyan-500/10 text-cyan-400 shadow-[0_8px_28px_-22px_rgba(34,211,238,0.7)]" : isDark ? "text-zinc-400 hover:text-white hover:bg-white/5" : "text-zinc-600 hover:text-zinc-950 hover:bg-slate-100"}`}
               >
                 {link.label}
               </Link>
@@ -86,38 +73,59 @@ function Navigation() {
           })}
         </div>
 
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className={`flex h-10 w-10 items-center justify-center rounded-2xl border transition duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400/40
+              ${isDark ? "border-zinc-700 bg-zinc-900 text-cyan-300 hover:bg-zinc-800" : "border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50"}`}
+            aria-label="Toggle theme"
+          >
+            {isDark ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
 
-
-        {/* Mobile menu trigger */}
-        <button 
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-zinc-400 hover:text-white transition"
-        >
-          {isOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className={`md:hidden flex h-10 w-10 items-center justify-center rounded-2xl border transition duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400/40
+              ${isDark ? "border-zinc-700 bg-zinc-900 text-cyan-300 hover:bg-zinc-800" : "border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50"}`}
+            aria-label="Toggle navigation menu"
+          >
+            {isOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Links Dropdown */}
-      {isOpen && (
-        <div className={`md:hidden mt-4 pt-4 border-t flex flex-col gap-3 ${isDark ? "border-zinc-900" : "border-zinc-200"}`}>
-          {links.map((link) => {
-            const isActive = link.to === "/"
-              ? (location.pathname === "/" || location.pathname === "/swap")
-              : location.pathname === link.to;
-            return (
-              <Link 
-                key={link.to} 
-                to={link.to}
-                onClick={() => setIsOpen(false)}
-                className={`text-xs uppercase tracking-wider font-semibold transition py-1 ${isActive ? "text-pink-500 text-neon-pink" : isDark ? "text-zinc-400 hover:text-white" : "text-zinc-500 hover:text-zinc-950"}`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </div>
-      )}
-    </nav>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className={`mx-auto mt-3 max-w-[calc(100%-3rem)] overflow-hidden rounded-none border border-white/20 bg-white/20 p-4 shadow-[0_22px_60px_-44px_rgba(15,23,42,0.25)] backdrop-blur-xl md:hidden
+              ${isDark ? "border-zinc-800/70 bg-zinc-950/55" : "border-slate-200/50 bg-white/40"}`}
+          >
+            <div className="flex flex-col gap-2">
+              {links.map((link) => {
+                const isActive = link.to === "/"
+                  ? location.pathname === "/" || location.pathname === "/swap"
+                  : location.pathname === link.to;
+                return (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    onClick={() => setIsOpen(false)}
+                    className={`rounded-3xl px-4 py-3 text-sm font-semibold uppercase tracking-[0.18em] transition duration-200
+                      ${isActive ? "bg-cyan-500/10 text-cyan-400" : isDark ? "text-zinc-300 hover:bg-white/5" : "text-zinc-700 hover:bg-slate-100"}`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
   );
 }
 
@@ -147,13 +155,10 @@ function MainLayout() {
           <Routes>
             <Route path="/" element={<SwapPage />} />
             <Route path="/swap" element={<SwapPage />} />
-            <Route path="/trending" element={<TrendingPage />} />
             <Route path="/transfer" element={<TransferPage />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/liquidity" element={<LiquidityPage />} />
             <Route path="/wallet" element={<WalletPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
           </Routes>
         </Suspense>
       </div>
