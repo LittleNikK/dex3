@@ -1,13 +1,14 @@
 import type { Address } from "viem";
+import { MST_LIVE_CONFIG } from "./mst-live";
 
 export const V3_FEE = 3000;
 export const ZERO_SQRT_PRICE_LIMIT = 0n;
 
-export const CONTRACTS = {
-  wmst: (import.meta.env.VITE_WMST_ADDRESS ?? "0x97f517A686bfc21D8398C9f6bf0fC0b8d30785Fc") as Address,
-  swapRouter: (import.meta.env.VITE_SWAP_ROUTER_ADDRESS ?? "0xefa02641c27ec527a09f8484dc491b525cb035f6") as Address,
-  quoterV2: (import.meta.env.VITE_QUOTER_V2_ADDRESS ?? "0x9b65cc383c258895ad0a6cf4157df924becfc86a") as Address
-};
+/**
+ * Contract addresses are loaded from Vite environment variables at build time.
+ * Use frontend/.env or environment-specific variables to change live MST Testnet endpoints.
+ */
+export const CONTRACTS = MST_LIVE_CONFIG.contracts;
 
 export interface TokenConfig {
   symbol: string;
@@ -17,7 +18,17 @@ export interface TokenConfig {
   isNativeWrapped?: boolean;
 }
 
+export const NATIVE_TOKEN_SYMBOL = "MST";
+export const NATIVE_TOKEN_DISPLAY_SYMBOL = "tMST";
+export const NATIVE_TOKEN_DISPLAY_NAME = "tMST Native Token";
+
 export const TOKENS: TokenConfig[] = [
+  {
+    symbol: "MST",
+    name: NATIVE_TOKEN_DISPLAY_NAME,
+    decimals: 18,
+    isNativeWrapped: true
+  },
   {
     symbol: "WMST",
     name: "Wrapped MST",
@@ -28,25 +39,21 @@ export const TOKENS: TokenConfig[] = [
   {
     symbol: "USDC",
     name: "USD Coin",
-    decimals: Number(import.meta.env.VITE_USDC_DECIMALS ?? 18),
-    address: (import.meta.env.VITE_USDC_ADDRESS ?? "0x3468b4ac95f03534a15F633790d9BbD88b130170") as Address | undefined
-  },
-  {
-    symbol: "USDT",
-    name: "Tether",
     decimals: 6,
-    address: import.meta.env.VITE_USDT_ADDRESS as Address | undefined
-  },
-  {
-    symbol: "WBTC",
-    name: "Wrapped BTC",
-    decimals: 8,
-    address: import.meta.env.VITE_WBTC_ADDRESS as Address | undefined
+    address: CONTRACTS.usdc
   }
 ];
 
 export function getToken(symbol: string) {
   return TOKENS.find((token) => token.symbol === symbol);
+}
+
+export function displayTokenSymbol(symbol: string) {
+  return symbol === NATIVE_TOKEN_SYMBOL ? NATIVE_TOKEN_DISPLAY_SYMBOL : symbol;
+}
+
+export function displayTokenName(symbol: string) {
+  return symbol === NATIVE_TOKEN_SYMBOL ? NATIVE_TOKEN_DISPLAY_NAME : getToken(symbol)?.name ?? symbol;
 }
 
 export const erc20Abi = [
@@ -138,5 +145,113 @@ export const swapRouterAbi = [
       }
     ],
     outputs: [{ name: "amountOut", type: "uint256" }]
+  }
+] as const;
+
+export const testingExecutorAbi = [
+  {
+    type: "function",
+    name: "activeTokenId",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }]
+  },
+  {
+    type: "function",
+    name: "initiatePoolAndLiquidity",
+    stateMutability: "payable",
+    inputs: [
+      {
+        name: "params",
+        type: "tuple",
+        components: [
+          { name: "fee", type: "uint24" },
+          { name: "sqrtPriceX96", type: "uint160" },
+          { name: "wmstDesired", type: "uint256" },
+          { name: "usdcDesired", type: "uint256" },
+          { name: "tickLower", type: "int24" },
+          { name: "tickUpper", type: "int24" }
+        ]
+      }
+    ],
+    outputs: [
+      { name: "pool", type: "address" },
+      { name: "tokenId", type: "uint256" },
+      { name: "liquidity", type: "uint128" },
+      { name: "amount0", type: "uint256" },
+      { name: "amount1", type: "uint256" }
+    ]
+  },
+  {
+    type: "function",
+    name: "increaseActiveLiquidity",
+    stateMutability: "payable",
+    inputs: [
+      { name: "wmstDesired", type: "uint256" },
+      { name: "usdcDesired", type: "uint256" }
+    ],
+    outputs: [
+      { name: "liquidityAdded", type: "uint128" },
+      { name: "amount0", type: "uint256" },
+      { name: "amount1", type: "uint256" }
+    ]
+  },
+  {
+    type: "function",
+    name: "decreaseActiveLiquidity",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "liquidityToRemove", type: "uint128" }],
+    outputs: [
+      { name: "amount0", type: "uint256" },
+      { name: "amount1", type: "uint256" }
+    ]
+  },
+  {
+    type: "function",
+    name: "collectActiveFees",
+    stateMutability: "nonpayable",
+    inputs: [],
+    outputs: [
+      { name: "amount0Collected", type: "uint256" },
+      { name: "amount1Collected", type: "uint256" }
+    ]
+  }
+] as const;
+
+export const lpStateStorageAbi = [
+  {
+    type: "function",
+    name: "poolAddress",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "address" }]
+  },
+  {
+    type: "function",
+    name: "lpTokenId",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }]
+  },
+  {
+    type: "function",
+    name: "lpLiquidity",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }]
+  },
+  {
+    type: "function",
+    name: "lpAmount0",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }]
+  },
+  {
+    type: "function",
+    name: "lpAmount1",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }]
   }
 ] as const;

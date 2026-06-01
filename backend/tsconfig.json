@@ -4,6 +4,8 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "strict": true,
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
     "outDir": "dist",
     "esModuleInterop": true,
     "skipLibCheck": true

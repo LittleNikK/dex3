@@ -1,13 +1,15 @@
+import { MST_LIVE_CONFIG } from "./mst-live";
+
 export const mstChain = {
-  id: 91562037,
+  id: MST_LIVE_CONFIG.chainId,
   name: "MST Testnet",
   nativeCurrency: {
-    name: "MST",
-    symbol: "MST",
+    name: "tMST",
+    symbol: "tMST",
     decimals: 18
   },
   rpcUrls: {
-    default: { http: ["https://testnetrpc.mstblockchain.com"] }
+    default: { http: [MST_LIVE_CONFIG.rpcUrl] }
   },
   blockExplorers: {
     default: { name: "MSTScan", url: "https://testnet.mstscan.com" }

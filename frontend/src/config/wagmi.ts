@@ -1,6 +1,7 @@
 import { createConfig, http } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { mstChain } from "./chains";
+import { MST_LIVE_CONFIG } from "./mst-live";
 
 export const wagmiConfig = createConfig({
   chains: [mstChain],
@@ -10,6 +11,6 @@ export const wagmiConfig = createConfig({
     })
   ],
   transports: {
-    [mstChain.id]: http(mstChain.rpcUrls.default.http[0])
+    [mstChain.id]: http(MST_LIVE_CONFIG.rpcUrl)
   }
 });

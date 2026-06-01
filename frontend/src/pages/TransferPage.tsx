@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { formatUnits, parseUnits, isAddress, type Address } from "viem";
-import { useAccount, usePublicClient, useWriteContract } from "wagmi";
+import { useAccount, useChainId, usePublicClient, useSwitchChain, useWriteContract } from "wagmi";
 import { getToken, TOKENS, erc20Abi } from "../config/contracts";
+import { mstChain } from "../config/chains";
 import { Wallet, Info, CheckCircle, Calculator, Send } from "lucide-react";
 
 export default function TransferPage() {
   const { isConnected, address } = useAccount();
+  const chainId = useChainId();
   const publicClient = usePublicClient();
+  const { switchChainAsync } = useSwitchChain();
   const { writeContractAsync } = useWriteContract();
 
   const [selectedSymbol, setSelectedSymbol] = useState("USDC");
@@ -64,9 +67,9 @@ export default function TransferPage() {
 
         const gasPrice = await publicClient.getGasPrice();
         const rawFee = gasLimit * gasPrice;
-        setGasFee(formatUnits(rawFee, 18) + " MST");
+        setGasFee(formatUnits(rawFee, 18) + " tMST");
       } catch {
-        setGasFee("0.00012 MST"); // Safe fallback standard rate
+        setGasFee("0.00012 tMST"); // Safe fallback standard rate
       } finally {
         setIsEstimating(false);
       }
@@ -91,6 +94,16 @@ export default function TransferPage() {
     if (!amount || Number(amount) <= 0) {
       setStatus("Enter a transfer quantity greater than zero.");
       return;
+    }
+
+    if (chainId !== mstChain.id) {
+      setStatus("Switch MetaMask to MST Testnet...");
+      try {
+        await switchChainAsync({ chainId: mstChain.id });
+      } catch {
+        setStatus("Transaction blocked until MetaMask is on MST Testnet.");
+        return;
+      }
     }
 
     try {

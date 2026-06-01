@@ -6,6 +6,7 @@ import { poolsRouter } from "./routes/pools.js";
 import { quoteRouter } from "./routes/quote.js";
 import { tokensRouter } from "./routes/tokens.js";
 import { metricsHandler } from "./metrics.js";
+import { startWsServer } from "./ws/server.js";
 
 dotenv.config();
 dotenv.config({ path: "../.env" });
@@ -24,11 +25,10 @@ app.use("/api/tokens", tokensRouter);
 
 const PORT = Number(process.env.PORT ?? 3001);
 
-// Only start listening when run directly (not when imported by tests).
-if (process.env.NODE_ENV !== "test") {
-  app.listen(PORT, () => {
-    console.log(`MST Swap backend listening on :${PORT}`);
-  });
-}
+export const server = app.listen(PORT, () => {
+  console.log(`MST Swap backend listening on :${PORT}`);
+});
+
+export const wsServer = startWsServer(server, PORT);
 
 export default app;
