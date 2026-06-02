@@ -10,6 +10,21 @@ export default {
           cyan: "#00F0FF",
           violet: "#8A2BE2",
           darkGray: "#0B0C10",
+        },
+        surface: "rgb(var(--surface) / <alpha-value>)",
+        "surface-elevated": "rgb(var(--surface-elevated) / <alpha-value>)",
+        border: "rgb(var(--border) / <alpha-value>)",
+        background: "rgb(var(--background) / <alpha-value>)",
+        foreground: "rgb(var(--foreground) / <alpha-value>)",
+        muted: {
+          foreground: "rgb(var(--muted-foreground) / <alpha-value>)",
+        },
+        success: "rgb(var(--success) / <alpha-value>)",
+        warning: "rgb(var(--warning) / <alpha-value>)",
+        destructive: "rgb(var(--destructive) / <alpha-value>)",
+        primary: {
+          DEFAULT: "rgb(var(--primary) / <alpha-value>)",
+          foreground: "rgb(var(--primary-foreground) / <alpha-value>)",
         }
       },
       fontFamily: {

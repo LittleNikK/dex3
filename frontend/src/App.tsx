@@ -12,6 +12,7 @@ import TransferPage from "./pages/TransferPage";
 import ExplorePage from "./pages/ExplorePage";
 import LiquidityPage from "./pages/LiquidityPage";
 import WalletPage from "./pages/WalletPage";
+import PortfolioPageWrapper from "./pages/PortfolioPage";
 
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { useThemeStore } from "./store/themeStore";
@@ -29,6 +30,7 @@ function Navigation() {
     { to: "/transfer", label: "Transfer" },
     { to: "/explore", label: "Explore" },
     { to: "/liquidity", label: "Pool" },
+    { to: "/portfolio", label: "Portfolio" },
     { to: "/wallet", label: "Connect Wallet" }
   ];
 
@@ -158,6 +160,7 @@ function MainLayout() {
             <Route path="/transfer" element={<TransferPage />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/liquidity" element={<LiquidityPage />} />
+            <Route path="/portfolio" element={<PortfolioPageWrapper />} />
             <Route path="/wallet" element={<WalletPage />} />
           </Routes>
         </Suspense>
