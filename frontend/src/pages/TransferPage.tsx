@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { formatUnits, parseUnits, isAddress, type Address } from "viem";
 import { useAccount, useChainId, usePublicClient, useSwitchChain, useWriteContract } from "wagmi";
 import { getToken, TOKENS, erc20Abi } from "../config/contracts";
+import { useThemeStore } from "../store/themeStore";
 import { mstChain } from "../config/chains";
 import { Wallet, Info, CheckCircle, Calculator, Send } from "lucide-react";
 
@@ -12,6 +13,8 @@ export default function TransferPage() {
   const publicClient = usePublicClient();
   const { switchChainAsync } = useSwitchChain();
   const { writeContractAsync } = useWriteContract();
+  const { theme } = useThemeStore();
+  const isDark = theme === "dark";
 
   const [selectedSymbol, setSelectedSymbol] = useState("USDC");
   const [recipient, setRecipient] = useState("");
@@ -135,22 +138,22 @@ export default function TransferPage() {
   }
 
   return (
-    <div className="relative min-h-screen px-4 pb-20 pt-10 overflow-hidden font-sans">
-      <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-indigo-950 rounded-full glowing-bg-spot animate-pulse-slow" />
-      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-pink-950 glowing-bg-spot animate-pulse-slow" />
+    <div className={`relative min-h-screen px-4 pb-20 pt-10 overflow-hidden font-sans transition-colors duration-500 ${isDark ? "bg-[#02040b] text-slate-100" : "bg-gradient-to-b from-[#f8f7ff] via-[#eef2ff] to-[#e7f0ff] text-slate-900"}`}>
+      <div className={`absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full glowing-bg-spot animate-pulse-slow ${isDark ? "bg-indigo-950/80" : "bg-sky-200/80"}`} />
+      <div className={`absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full glowing-bg-spot animate-pulse-slow ${isDark ? "bg-fuchsia-950/70" : "bg-pink-200/70"}`} />
 
       <div className="max-w-xl mx-auto space-y-8">
         {/* Title */}
-        <div className="flex flex-col gap-2 border-b border-zinc-800 pb-6">
-          <span className="text-xs font-semibold tracking-wider text-purple-400 uppercase">EIP-1559 Calculator</span>
-          <h1 className="text-3xl font-display font-extrabold uppercase text-white tracking-wide">Secure Transfer</h1>
+        <div className={`flex flex-col gap-2 border-b pb-6 transition-colors ${isDark ? "border-slate-800" : "border-slate-300"}`}>
+          <span className={`text-xs font-semibold tracking-wider uppercase ${isDark ? "text-cyan-300" : "text-indigo-500"}`}>EIP-1559 Calculator</span>
+          <h1 className={`text-3xl font-display font-extrabold uppercase tracking-wide ${isDark ? "text-white" : "text-slate-950"}`}>Secure Transfer</h1>
         </div>
 
         {/* Transfer container */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-6 rounded-2xl border border-zinc-800 bg-zinc-950/60 backdrop-blur-xl space-y-6"
+          className={`p-6 rounded-[32px] border shadow-[0_35px_120px_-55px_rgba(15,23,42,0.55)] backdrop-blur-2xl transition-all duration-500 space-y-6 ${isDark ? "border-slate-700/70 bg-slate-950/85" : "border-slate-200/80 bg-white/90"}`}
         >
           {/* Token selector */}
           <div className="space-y-2">
@@ -165,7 +168,7 @@ export default function TransferPage() {
               name="transferToken"
               value={selectedSymbol}
               onChange={(e) => setSelectedSymbol(e.target.value)}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white outline-none focus:border-purple-500 transition"
+              className={`w-full rounded-xl px-4 py-3 outline-none transition ring-1 ${isDark ? "bg-slate-900 border-slate-700 ring-slate-700/50 text-slate-100 focus:ring-cyan-500/40" : "bg-slate-50 border-slate-200 ring-slate-200 text-slate-950 focus:ring-cyan-200"}`}
             >
               {TOKENS.filter((t) => t.address).map((t) => (
                 <option key={t.symbol} value={t.symbol}>{t.name} ({t.symbol})</option>
@@ -182,7 +185,7 @@ export default function TransferPage() {
               placeholder="0x..."
               value={recipient}
               onChange={(e) => setRecipient(e.target.value)}
-              className="w-full bg-transparent border border-zinc-800 rounded-xl px-4 py-3 text-white outline-none focus:border-purple-500 transition font-mono placeholder:text-zinc-600 text-sm"
+              className={`w-full rounded-xl px-4 py-3 outline-none transition ${isDark ? "bg-slate-900 border-slate-700 text-slate-100 placeholder:text-slate-500 focus:ring-cyan-500/40" : "bg-white border-slate-200 text-slate-950 placeholder:text-slate-400 focus:ring-cyan-200"}`}
             />
           </div>
 
@@ -196,23 +199,23 @@ export default function TransferPage() {
               placeholder="0.0"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full bg-transparent border border-zinc-800 rounded-xl px-4 py-3 text-white outline-none focus:border-purple-500 transition placeholder:text-zinc-600 text-sm"
+              className={`w-full rounded-xl px-4 py-3 outline-none transition ${isDark ? "bg-slate-900 border-slate-700 text-slate-100 placeholder:text-slate-500 focus:ring-cyan-500/40" : "bg-white border-slate-200 text-slate-950 placeholder:text-slate-400 focus:ring-cyan-200"}`}
             />
           </div>
 
           {/* Gas Calculator Panel */}
-          <div className="p-4 rounded-xl border border-zinc-900 bg-zinc-950/40 text-xs font-mono space-y-2.5">
-            <div className="flex items-center gap-1.5 text-zinc-400 font-sans font-bold uppercase tracking-wider text-[10px] mb-1">
-              <Calculator size={14} className="text-purple-400" />
+          <div className={`p-4 rounded-3xl border text-xs font-mono space-y-3 transition-colors ${isDark ? "border-slate-800 bg-slate-900/80" : "border-slate-200 bg-slate-50/90"}`}>
+            <div className={`flex items-center gap-1.5 font-sans font-bold uppercase tracking-wider text-[10px] mb-1 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+              <Calculator size={14} className={`${isDark ? "text-cyan-300" : "text-indigo-500"}`} />
               Live Gas Commission Estimate
             </div>
-            <div className="flex justify-between border-b border-zinc-900 pb-2">
-              <span className="text-zinc-500">EVM Provider</span>
-              <span className="text-zinc-300">Viem http() client</span>
+            <div className={`flex justify-between border-b pb-2 ${isDark ? "border-slate-800" : "border-slate-200"}`}>
+              <span className={isDark ? "text-slate-500" : "text-slate-600"}>EVM Provider</span>
+              <span className={isDark ? "text-slate-300" : "text-slate-700"}>Viem http() client</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-zinc-500">Estimated Gas Fee</span>
-              <span className="text-pink-400 font-bold">
+              <span className={isDark ? "text-slate-500" : "text-slate-600"}>Estimated Gas Fee</span>
+              <span className="text-emerald-400 font-bold">
                 {isEstimating ? "Calculating..." : (gasFee ?? "—")}
               </span>
             </div>
@@ -220,14 +223,14 @@ export default function TransferPage() {
 
           {/* Status feedback */}
           {status && (
-            <p className="text-xs text-zinc-300 flex items-center gap-1.5 justify-center leading-relaxed">
-              <Info size={14} className="text-pink-400 animate-pulse shrink-0" />
+            <p className={`text-xs flex items-center gap-1.5 justify-center leading-relaxed ${isDark ? "text-slate-300" : "text-slate-600"}`}>
+              <Info size={14} className={`${isDark ? "text-cyan-300" : "text-teal-500"} animate-pulse shrink-0`} />
               {status}
             </p>
           )}
 
           {txHash && (
-            <div className="p-4 rounded-xl border border-emerald-900/20 bg-emerald-950/10 text-xs text-center space-y-1">
+            <div className={`p-4 rounded-3xl border text-xs text-center space-y-1 transition-colors ${isDark ? "border-emerald-600/30 bg-emerald-950/15 text-slate-100" : "border-emerald-200/50 bg-emerald-50 text-slate-900"}`}>
               <div className="text-emerald-400 font-semibold flex items-center gap-1.5 justify-center">
                 <CheckCircle size={14} /> Transaction Submitted
               </div>
@@ -235,7 +238,7 @@ export default function TransferPage() {
                 href={`https://testnet.mstscan.com/tx/${txHash}`}
                 target="_blank"
                 rel="noreferrer"
-                className="text-pink-400 hover:underline break-all block font-mono"
+                className={`hover:underline break-all block font-mono ${isDark ? "text-cyan-200" : "text-teal-700"}`}
               >
                 Tx: {txHash}
               </a>
@@ -244,7 +247,7 @@ export default function TransferPage() {
 
           {/* Action button */}
           <button
-            className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-semibold text-white gradient-gta hover:scale-102 transition shadow-lg shadow-pink-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
+            className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-semibold text-white transition-transform ${isDark ? "bg-[#31A79E] shadow-[0_20px_60px_-20px_rgba(49,167,158,0.9)]" : "bg-[#31A79E] shadow-[0_20px_40px_-15px_rgba(49,167,158,0.45)]"} hover:scale-[1.02] hover:bg-[#2b958a] disabled:cursor-not-allowed disabled:bg-slate-500`}
             onClick={handleTransfer}
             disabled={!amount || !recipient}
           >
