@@ -376,46 +376,8 @@ export default function LiquidityPage() {
 
   return (
     <div
-      className={`min-h-screen relative font-sans transition-colors duration-300 ease-in-out select-none overflow-x-hidden pb-20
-        ${isDark ? "bg-[#0D111C] text-white" : "bg-white text-zinc-950"}`}
-      style={{
-        background: isDark
-          ? "linear-gradient(135deg, #0D111C 0%, #1a1f2e 50%, #0D111C 100%)"
-          : "linear-gradient(135deg, #fafbfc 0%, #f5f7fa 50%, #fafbfc 100%)"
-      }}
+      className={`min-h-[calc(100vh-72px)] relative font-sans transition-colors duration-300 ease-in-out select-none overflow-x-hidden pb-20 ${isDark ? "text-white" : "text-zinc-950"}`}
     >
-      {/* Ambient glow effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            x: [0, -40, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className={`absolute left-1/4 top-1/4 w-[500px] h-[500px] rounded-full blur-[140px] opacity-12
-            ${isDark ? "bg-gradient-to-r from-cyan-500/30 to-purple-500/30" : "bg-gradient-to-r from-cyan-400/20 to-blue-400/20"}`}
-        />
-        <motion.div
-          animate={{
-            scale: [1, 1.1, 1],
-            x: [0, 50, 0],
-            y: [0, -40, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1
-          }}
-          className={`absolute right-1/4 bottom-1/3 w-[600px] h-[600px] rounded-full blur-[150px] opacity-10
-            ${isDark ? "bg-gradient-to-l from-pink-500/20 to-orange-500/20" : "bg-gradient-to-l from-pink-300/15 to-orange-300/15"}`}
-        />
-      </div>
 
 
 

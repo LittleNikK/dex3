@@ -1,32 +1,42 @@
 import { useThemeStore } from "../store/themeStore";
 import { PortfolioPage } from "../features/portfolio/components/PortfolioPage";
+import { useAccount, useConnect } from "wagmi";
 
 export default function PortfolioPageWrapper() {
   const { theme } = useThemeStore();
   const isDark = theme === "dark";
+  const { isConnected } = useAccount();
+  const { connectors, connect } = useConnect();
+
+  const metaMaskConnector =
+    connectors.find((item) => item.name.toLowerCase().includes("metamask")) ??
+    connectors.find((item) => item.id === "injected");
+
+  if (!isConnected) {
+    return (
+      <div
+        className={`min-h-[calc(100vh-72px)] relative font-sans transition-colors duration-300 ease-in-out select-none flex flex-col items-center justify-center px-4 ${isDark ? "dark text-white" : "text-zinc-950"}`}
+      >
+        <div className="max-w-md w-full text-center p-8 rounded-3xl border border-zinc-200/50 dark:border-white/10 bg-white/50 dark:bg-black/20 backdrop-blur-md shadow-xl">
+          <p className={`text-sm mb-6 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
+            you are not connected to the wallet , make sure to connect your wallet
+          </p>
+          <button
+            onClick={() => metaMaskConnector && connect({ connector: metaMaskConnector })}
+            disabled={!metaMaskConnector}
+            className="w-full rounded-2xl bg-gradient-to-r from-cyan-500 to-indigo-600 px-4 py-3.5 text-sm font-display font-bold text-white hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Connect Wallet
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
-      className={`min-h-screen relative font-sans transition-colors duration-300 ease-in-out select-none overflow-x-hidden pb-20 pt-10 px-4
-        ${isDark ? "dark bg-[#0D111C] text-white" : "bg-white text-zinc-950"}`}
-      style={{
-        background: isDark
-          ? "linear-gradient(135deg, #0D111C 0%, #1a1f2e 50%, #0D111C 100%)"
-          : "linear-gradient(135deg, #fafbfc 0%, #f5f7fa 50%, #fafbfc 100%)"
-      }}
+      className={`min-h-[calc(100vh-72px)] relative font-sans transition-colors duration-300 ease-in-out select-none overflow-x-hidden pb-20 pt-10 px-4 ${isDark ? "dark text-white" : "text-zinc-950"}`}
     >
-      {/* Ambient glow effects matching the pool page */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div
-          className={`absolute left-1/4 top-1/4 w-[500px] h-[500px] rounded-full blur-[140px] opacity-12 transition-all duration-500
-            ${isDark ? "bg-gradient-to-r from-cyan-500/30 to-purple-500/30" : "bg-gradient-to-r from-cyan-400/20 to-blue-400/20"}`}
-        />
-        <div
-          className={`absolute right-1/4 bottom-1/3 w-[600px] h-[600px] rounded-full blur-[150px] opacity-10 transition-all duration-500
-            ${isDark ? "bg-gradient-to-l from-pink-500/20 to-orange-500/20" : "bg-gradient-to-l from-pink-300/15 to-orange-300/15"}`}
-        />
-      </div>
-
       <div className="relative z-10 max-w-6xl mx-auto space-y-8">
         <PortfolioPage />
       </div>

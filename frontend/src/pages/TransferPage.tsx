@@ -138,9 +138,7 @@ export default function TransferPage() {
   }
 
   return (
-    <div className={`relative min-h-screen px-4 pb-20 pt-10 overflow-hidden font-sans transition-colors duration-500 ${isDark ? "bg-[#02040b] text-slate-100" : "bg-gradient-to-b from-[#f8f7ff] via-[#eef2ff] to-[#e7f0ff] text-slate-900"}`}>
-      <div className={`absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full glowing-bg-spot animate-pulse-slow ${isDark ? "bg-indigo-950/80" : "bg-sky-200/80"}`} />
-      <div className={`absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full glowing-bg-spot animate-pulse-slow ${isDark ? "bg-fuchsia-950/70" : "bg-pink-200/70"}`} />
+    <div className={`relative min-h-[calc(100vh-72px)] px-4 pb-20 pt-10 font-sans transition-colors duration-500 ${isDark ? "text-slate-100" : "text-slate-900"}`}>
 
       <div className="max-w-xl mx-auto space-y-8">
         {/* Title */}

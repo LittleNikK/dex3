@@ -113,6 +113,8 @@ export function SwapWidget({ theme }: SwapWidgetProps) {
 
   // Retrieve balances
   const [balanceIn, setBalanceIn] = useState("0.00");
+  const [balanceOut, setBalanceOut] = useState("0.00");
+  
   useEffect(() => {
     let active = true;
     async function fetchBalance() {
@@ -147,6 +149,41 @@ export function SwapWidget({ theme }: SwapWidgetProps) {
       active = false;
     };
   }, [address, isConnected, tokenIn, inputToken, publicClient, nativeBalanceData]);
+
+  useEffect(() => {
+    let active = true;
+    async function fetchBalanceOut() {
+      if (!isConnected || !address || !publicClient) return;
+
+      if (tokenOut === "MST") {
+        if (active && nativeBalanceData) {
+          setBalanceOut(Number(nativeBalanceData.formatted).toFixed(4));
+        }
+        return;
+      }
+
+      if (!outputToken?.address) return;
+      try {
+        const rawBalance = (await publicClient.readContract({
+          address: outputToken.address as Address,
+          abi: erc20Abi,
+          functionName: "balanceOf",
+          args: [address as Address]
+        })) as bigint;
+
+        if (active) {
+          setBalanceOut(Number(formatUnits(rawBalance, outputToken.decimals)).toFixed(4));
+        }
+      } catch (err) {
+        if (active) setBalanceOut("0.00");
+      }
+    }
+
+    fetchBalanceOut();
+    return () => {
+      active = false;
+    };
+  }, [address, isConnected, tokenOut, outputToken, publicClient, nativeBalanceData]);
 
   // Handle Concentrated Pool Quotes
   useEffect(() => {
@@ -632,7 +669,7 @@ export function SwapWidget({ theme }: SwapWidgetProps) {
         {/* Header bar */}
         <div className="flex items-center justify-between mb-5 relative">
           <div className="flex items-center gap-2">
-            <span className="font-display font-bold text-xl tracking-tight text-zinc-950 dark:bg-gradient-to-r dark:from-white dark:via-zinc-200 dark:to-zinc-500 dark:bg-clip-text dark:text-transparent">
+            <span className={`font-display font-bold text-xl tracking-tight ${isDark ? "text-white" : "text-zinc-950"}`}>
               MST Swap
             </span>
             <span className="flex h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
@@ -702,9 +739,9 @@ export function SwapWidget({ theme }: SwapWidgetProps) {
                       You pay
                     </span>
                     {isConnected && (
-                      <div className="flex items-center gap-1 text-[11px] font-bold font-mono text-zinc-500">
+                      <div className={`flex items-center gap-1 text-[11px] font-bold font-mono ${isDark ? "text-zinc-500" : "text-zinc-500"}`}>
                         <span>Balance:</span>
-                        <NumberTicker value={balanceIn} className="text-zinc-400 font-bold" />
+                        <NumberTicker value={balanceIn} className={`font-bold ${isDark ? "text-zinc-400" : "text-zinc-600"}`} />
                       </div>
                     )}
                   </div>
@@ -779,6 +816,12 @@ export function SwapWidget({ theme }: SwapWidgetProps) {
                     <span className={`text-xs font-semibold uppercase tracking-wider ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>
                       You receive
                     </span>
+                    {isConnected && (
+                      <div className={`flex items-center gap-1 text-[11px] font-bold font-mono ${isDark ? "text-zinc-500" : "text-zinc-500"}`}>
+                        <span>Balance:</span>
+                        <NumberTicker value={balanceOut} className={`font-bold ${isDark ? "text-zinc-400" : "text-zinc-600"}`} />
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex items-center justify-between gap-3">

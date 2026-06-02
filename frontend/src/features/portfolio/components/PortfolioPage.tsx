@@ -11,7 +11,8 @@ import { PortfolioHeader } from "./PortfolioHeader";
 import { PortfolioSummaryCards } from "./PortfolioSummaryCards";
 import { PortfolioValueChart } from "./PortfolioValueChart";
 import { PortfolioAllocation } from "./PortfolioAllocation";
-import { PortfolioQuickActions } from "./PortfolioQuickActions";
+import { PortfolioAssetsBoxes } from "./PortfolioAssetsBoxes";
+
 import { PortfolioTabs } from "./PortfolioTabs";
 
 export function PortfolioPage() {
@@ -108,7 +109,9 @@ export function PortfolioPage() {
         />
       </div>
 
-      <PortfolioQuickActions />
+      {activeAssets.length > 0 && (
+        <PortfolioAssetsBoxes assets={activeAssets} />
+      )}
 
       <PortfolioTabs
         selectedTab={selectedTab}

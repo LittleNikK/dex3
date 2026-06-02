@@ -52,8 +52,7 @@ export default function SwapPage() {
 
   return (
     <div
-      className={`min-h-screen relative font-sans transition-colors duration-300 ease-in-out select-none overflow-x-hidden
-        ${isDark ? "bg-[#050505]/0 text-white" : "bg-[#F9FAFB] text-zinc-950"}`}
+      className={`min-h-[calc(100vh-72px)] relative font-sans transition-colors duration-300 ease-in-out select-none overflow-x-hidden`}
     >
 
       {/* Blurred glow background behind the centerpiece swap card for light mode */}

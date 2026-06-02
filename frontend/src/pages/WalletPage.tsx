@@ -1,12 +1,16 @@
 import { AlertCircle, CheckCircle2, ExternalLink, PlugZap, Power, Wallet } from "lucide-react";
 import { useAccount, useChainId, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 import { mstChain } from "../config/chains";
+import { useThemeStore } from "../store/themeStore";
 
 function shortenAddress(address: string) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
 export default function WalletPage() {
+  const { theme } = useThemeStore();
+  const isDark = theme === "dark";
+
   const { address, isConnected, connector } = useAccount();
   const chainId = useChainId();
   const { connectors, connect, isPending, error } = useConnect();
@@ -20,14 +24,14 @@ export default function WalletPage() {
   const onMstChain = chainId === mstChain.id;
 
   return (
-    <main className="mx-auto flex min-h-[calc(100vh-72px)] max-w-5xl items-center px-4 py-10 select-none">
+    <main className={`mx-auto flex min-h-[calc(100vh-72px)] max-w-5xl items-center px-4 py-10 select-none ${isDark ? "dark" : ""}`}>
       <section className="grid w-full gap-6 md:grid-cols-[1fr_380px] md:items-center relative z-10">
         <div>
           <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-400">
             <Wallet size={22} />
           </div>
-          <h1 className="text-4xl font-display font-extrabold uppercase text-zinc-950 dark:text-white tracking-wide">Connect MetaMask</h1>
-          <p className="mt-3 max-w-xl text-sm leading-6 text-zinc-400 font-medium">
+          <h1 className="text-4xl font-display font-extrabold uppercase tracking-wide">Connect MetaMask</h1>
+          <p className="mt-3 max-w-xl text-sm leading-6 text-zinc-600 dark:text-zinc-400 font-medium">
             Connect your wallet to MST Swap, confirm you are on MST Testnet, then continue to swaps and liquidity.
           </p>
         </div>

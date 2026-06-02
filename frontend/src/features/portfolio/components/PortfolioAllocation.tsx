@@ -59,35 +59,6 @@ export function PortfolioAllocation({ assets, isLoading, isError, error }: Portf
                 </PieChart>
               </ResponsiveContainer>
             </div>
-
-            <div className="space-y-3">
-              {sorted.map((asset) => (
-                <div key={asset.id} className="rounded-2xl border border-border/60 bg-background/60 p-3">
-                  <div className="flex items-center gap-3">
-                    <TokenAvatar symbol={asset.symbol} />
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-3">
-                        <div>
-                          <div className="font-medium">{asset.symbol}</div>
-                          <div className="text-xs text-muted-foreground">{asset.name}</div>
-                        </div>
-                        <div className="text-right text-sm font-semibold">{formatPortfolioUsd(asset.valueUsd)}</div>
-                      </div>
-                      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted/80">
-                        <div
-                          className="h-full rounded-full bg-gradient-to-r from-primary via-cyan-400 to-success"
-                          style={{ width: `${Math.min(100, asset.allocation)}%` }}
-                        />
-                      </div>
-                      <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-                        <span>{asset.network}</span>
-                        <span>{formatPortfolioPct(asset.allocation)}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
           </>
         )}
       </CardContent>
